@@ -29,7 +29,7 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
 
   // Función para obtener las categorías desde Supabase
   async function fetchCategorias() {
-    const { data, error } = await supabase.from("categories").select("category_id, category_name");
+    const { data, error } = await supabase.from("categories").select("category_id, category_name, description");
     if (error) {
       console.error("Error al obtener categorías:", error);
     } else {
@@ -111,7 +111,7 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                   placeholder=""
                   {...register("nombre", { required: true })}
                 />
-                <label className="form__label">Praducto</label>
+                <label className="form__label">ID_Producto</label>
                 {errors.nombre?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>
@@ -126,7 +126,7 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                   placeholder=""
                   {...register("descripcion", { required: true })}
                 />
-                <label className="form__label">Descripcion</label>
+                <label className="form__label">Nombre</label>
                 {errors.descripcion?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>

@@ -21,10 +21,31 @@ export const usePaqueteStore = create((set, get) => ({
     try {
       const response = await MostrarTodosPaquetes();
       set({ datapaquete: response });
+      console.log(response);
       return response;
     } catch (error) {
       console.error("Error al mostrar todos los paquetes:", error);
       throw error;
+    }
+  },
+
+  InsertarPaquete: async (paquete, productos) => {
+    set({ isLoading: true }); 
+    try {
+      const response = await InsertarPaquete(paquete, productos);
+      if (response) {
+        const todosPaquetes = await MostrarTodosPaquetes();
+        set({ datapaquete: todosPaquetes });
+      }
+      console.log(productos);
+
+      window.location.reload();
+      return { success: !!response };
+    } catch (error) {
+      console.error("Error al insertar paquete:", error);
+      return { success: false, error: error.message };
+    } finally {
+      set({ isLoading: false }); 
     }
   },
 
@@ -62,22 +83,25 @@ export const usePaqueteStore = create((set, get) => ({
   },
 
   // Editar un paquete con sus productos asociados
-  editarPaquete: async (id_paquete, paquete, productos) => {
+  editarPaquete: async (p, paquete, productos) => {
     set({ isLoading: true }); // Activar indicador de carga
+    console.log("ID del paquete a editar: " + p.id_paque);
+    console.log("Editar un paquete con sus productos: " + JSON.stringify(productos, null, 2));
     try {
-      if (!id_paquete || !paquete || !productos || productos.length === 0) {
+      if (!p || !paquete ) {
         throw new Error("Datos inválidos para editar paquete.");
       }
 
       const payload = { ...paquete, productos };
-      await EditarPaquete(id_paquete, payload); // Llamada al backend para editar
+      console.log("Payload: " + payload.nombre + payload.precio);
+      await EditarPaquete(payload, p, productos); // Llamada al backend para editar
 
       // Actualizar el paquete en la lista local
       const nuevaLista = get().datapaquete.map((p) =>
-        p.id_paquete === id_paquete ? { ...p, ...paquete, productos } : p
+        p.id_paquete === p.id_paquete ? { ...p, ...paquete, productos } : p
       );
       set({ datapaquete: nuevaLista });
-
+      window.location.reload();
       return { success: true };
     } catch (error) {
       console.error("Error al editar paquete:", error);

@@ -47,10 +47,10 @@ export async function EliminarProductos(id) {
   }
 
 // Editar un producto
-export async function EditarProductos(id,name,description,price,stock_quantity,category_id,is_active,image_id=4) {
+export async function EditarProductos(id,name,description,price,stock_quantity,category_id,is_active, image_id=4) {
   const { data, error } = await supabase
     .from("products")
-    .update({name,description,price,stock_quantity,category_id,is_active,image_id:4})
+    .update({name,description,price,stock_quantity,category_id,is_active, image_id:image_id || 1 })
     .eq("product_id", id);
 
     if (error) {
@@ -65,6 +65,19 @@ export async function EditarProductos(id,name,description,price,stock_quantity,c
 export async function BuscarProductos(p) {
   const { data, error } = await supabase.rpc("buscarproductos", p);
 
+  if (error) {
+    console.error("Error al buscar productos:", error);
+    return { success: false, message: "Error al buscar productos", data: [] };
+  }
+
+  return { success: true, data };
+}
+
+export async function BuscarProductosPorID(id) {
+  const { data, error } = await supabase
+  .from("paquete_producto")
+  .select("*")
+  .eq("id_paquete",id);
   if (error) {
     console.error("Error al buscar productos:", error);
     return { success: false, message: "Error al buscar productos", data: [] };

@@ -20,7 +20,7 @@ export function Productos() {
   });
 
   // Ejecutar la búsqueda automáticamente cuando `buscador` cambie
- /* React.useEffect(() => {
+  /* React.useEffect(() => {
     if (buscador.trim() !== "") {
       buscarProductosMutate({ descripcion: buscador });
     }

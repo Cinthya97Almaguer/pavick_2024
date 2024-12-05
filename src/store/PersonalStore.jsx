@@ -17,9 +17,9 @@ export const usePersonalStore = create((set, get) => ({
     try {
       const response = await MostrarPersonal(p);
       if (response && response.length > 0) {
-        set({ parametro: p });
-        set({ datapersona: response });
-        set({ personalItemSelect: response[0] });
+        set({ parametro: p }); // Actualiza los parámetros
+        set({ datapersona: response }); // Actualiza la lista de personal
+        set({ personalItemSelect: response[0] }); // Selecciona el primer elemento
       } else {
         console.warn("No se encontró ningún personal");
         set({ datapersona: [] });
@@ -37,11 +37,16 @@ export const usePersonalStore = create((set, get) => ({
 
   // Función para insertar personal
   insertarPersonal: async (p) => {
+    const direccionPorDefecto = p.direccion || "Dirección no proporcionada";
     const { data, error } = await supabase
-      .from("usuarios") // Cambiar "usuarios" por la tabla "personal"
-      .insert(p)
+      .from("usuarios") // Cambiar "usuarios" por la tabla correspondiente
+      .insert({
+        ...p,
+        direccion: direccionPorDefecto,
+      })
       .select()
       .maybeSingle();
+
     if (error) {
       Swal.fire({
         icon: "error",
@@ -50,47 +55,75 @@ export const usePersonalStore = create((set, get) => ({
       });
     }
     if (data) {
-      const { mostrarPersonal } = get(); // Llamamos a la función para actualizar la lista de personal
-      const { parametro } = get(); // Obtenemos los parámetros para la consulta
-      set(mostrarPersonal(parametro)); // Actualiza la lista después de insertar
+      const { mostrarPersonal } = get();
+      const { parametro } = get();
+      mostrarPersonal(parametro); // Actualiza la lista después de insertar
       return data;
     }
   },
 
   // Función para eliminar personal
   eliminarPersonal: async (p) => {
-    await EliminarPersonal(p); // Asegúrate de que se pase el parámetro correcto
+    await EliminarPersonal(p);
     const { mostrarPersonal } = get();
     const { parametro } = get();
-    set(mostrarPersonal(parametro)); // Actualiza la lista después de eliminar
+    mostrarPersonal(parametro); // Actualiza la lista después de eliminar
   },
 
   // Función para editar personal
   editarPersonal: async (p) => {
+    console.log("Datos de personal a editar:", p);
+  
+    // Obtener el ID del registro a editar
+    const idToEdit = p.id;
+    if (!idToEdit) {
+      Swal.fire({
+        icon: "error",
+        title: "Error",
+        text: "El ID del personal es necesario para editar.",
+      });
+      console.log("Datos recibidos para edición:", p);
+      return;
+    }
+  
+    // Limpiar los datos antes de enviarlos a Supabase
+    const datosEditados = {
+      ...p,
+      direccion: p.direccion || "-", // Asegurarse de no enviar campos nulos
+    };
+  
+    console.log("ID a editar:", idToEdit);
+    console.log("Datos enviados para edición:", datosEditados);
+  
     const { data, error } = await supabase
-      .from("usuarios") // Cambiar "usuarios" por la tabla "personal"
-      .update(p)
-      .match({ id: p.id }) // Asegúrate de que el parámetro 'id_personal' sea el correcto
+      .from("usuarios")
+      .update(datosEditados)
+      .match({ id: idToEdit })
       .select()
       .maybeSingle();
+  
     if (error) {
       Swal.fire({
         icon: "error",
         title: "Oops...",
         text: "Error al editar personal: " + error.message,
       });
+      return;
     }
+  
     if (data) {
-      const { mostrarPersonal } = get(); // Llamamos a la función para actualizar la lista de personal
-      const { parametro } = get(); // Obtenemos los parámetros para la consulta
-      set(mostrarPersonal(parametro)); // Actualiza la lista después de editar
+      console.log("Datos actualizados:", data);
+      const { mostrarPersonal } = get();
+      const { parametro } = get();
+      mostrarPersonal(parametro); // Actualiza la lista después de editar
       return data;
     }
   },
+  
 
   // Función para buscar personal
   buscarPersonal: async (p) => {
     const response = await BuscarPersonal(p);
-    set({ datapersona: response }); // Actualiza la lista con los resultados de la búsqueda
+    set({ datapersona: response });
   },
 }));

@@ -75,7 +75,7 @@ export function TablaProductos({
   const columns = useMemo(() => [
     {
       accessorKey: "name",
-      header: "Nombre",
+      header: "ID",
       cell: (info) => (
         <td data-title="Nombre" className="ContentCell">
           <span>{info.getValue()}</span>
@@ -84,7 +84,7 @@ export function TablaProductos({
     },
     {
       accessorKey: "description",
-      header: "Descripción",
+      header: "Nombre",
       cell: (info) => (
         <td data-title="Descripción" className="ContentCell">
           <span>{info.getValue()}</span>

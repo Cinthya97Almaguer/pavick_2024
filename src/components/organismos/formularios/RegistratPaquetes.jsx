@@ -6,7 +6,7 @@ import { supabase } from "../../../index";
 import { v } from "../../../styles/variables"; // Asegúrate de tener las variables que usas para los iconos
 
 export function RegistratPaquetes({ onClose, dataSelect, accion }) {
-  const { insertarPaquete, editarPaquete } = usePaqueteStore();
+  const { InsertarPaquete, editarPaquete } = usePaqueteStore();
   const {
     register,
     formState: { errors },
@@ -54,11 +54,13 @@ export function RegistratPaquetes({ onClose, dataSelect, accion }) {
         cantidad: parseInt(p.cantidad, 10),
       })),
     };
-
+    console.log("Datos para editar:", JSON.stringify(dataSelect, null, 2));
+    console.log("Payload para editar:", JSON.stringify(payload, null, 2));
+    console.log("Payload para insertar:", payload.productos);
     if (accion === "Nuevo") {
-      await insertarPaquete(payload, payload.productos);
+      await InsertarPaquete(payload, payload.productos);
     } else if (accion === "Editar") {
-      await editarPaquete(dataSelect.id_paquete, payload, payload.productos);
+      await editarPaquete(dataSelect, payload, payload.productos);
     }
     onClose();
   }

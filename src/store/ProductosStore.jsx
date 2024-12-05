@@ -5,6 +5,8 @@ import {
   EditarProductos,
   EliminarProductos,
   BuscarProductos,
+  BuscarProductosPorID,
+  MostrarPaquetesConProductos,
 } from "../index";
 
 export const useProductosStore = create((set, get) => ({
@@ -113,4 +115,34 @@ export const useProductosStore = create((set, get) => ({
       throw new Error("No se pudieron buscar los productos.");
     }
   },
+
+
+  buscarproductosPorID: async (id) => {
+    try {
+      console.log("Buscando productos con id:", id.id_paquete);
+      const response = await BuscarProductosPorID(id);
+
+      set({
+        dataproductos: response,
+      });
+
+      console.log("Productos encontrados:", response);
+      return response;
+    } catch (error) {
+      console.error("Error al buscar productos:", error);
+      throw new Error("No se pudieron buscar los productos.");
+    }
+  },
+
+  datapaquetes: [],
+  mostrarTodosPaquetes: async () => {
+      try {
+          const paquetes = await MostrarPaquetesConProductos();
+          set({ datapaquetes: paquetes });
+          console.log("Paquetes with products:", paquetes);
+      } catch (error) {
+          console.error("Error fetching paquetes:", error);
+      }
+  },
+
 }));

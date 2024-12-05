@@ -25,7 +25,7 @@ export function RegistrarAdmin({ setState }) {
       const p = {
         correo: data.correo,
         pass:data.pass,
-        tipouser:"admin"
+        tipouser:"administrador"
       }; 
       const dt =   await insertarUsuarioAdmin(p);
       if (dt) {

@@ -12,12 +12,12 @@ import {
   import { ContentAccionesTabla, useUsuariosStore, Paginacion, usePersonalStore } from "../../../index"; // Ajustar imports según tu estructura
   import { useState } from "react";
     
-  export function TablaPersonal({ data, setopenRegistraUsuario, setdataSelect, setAccion }) 
+  export function TablaPersonal({ data, setOpenRegistrarPersonal, setDataSelect, setAccion }) 
   {
     const [pagina, setPagina] = useState(1);
     const { eliminarPersonal } = usePersonalStore(); // Ajustar según tu store
     const editar = (data) => {
-      if (data.nombre === "Usuario Admin") { // Cambia la condición según tu lógica
+      if (data.nombres === "Usuario Admin") {
         Swal.fire({
           icon: "error",
           title: "No se puede editar este usuario",
@@ -25,10 +25,12 @@ import {
         });
         return;
       }
-      setopenRegistraUsuario(true);
-      setdataSelect(data);
+      console.log("Datos seleccionados para edición:", data); // Verificar los datos seleccionados
+      setOpenRegistrarPersonal(true);
+      setDataSelect(data); // Asegurarte de que contiene el ID y demás campos necesarios
       setAccion("Editar");
     };
+    
     const eliminar = (p) => {
       if (p.nombre === "Usuario Admin") { // Cambia la condición según tu lógica
         Swal.fire({
@@ -57,36 +59,34 @@ import {
     };
     const columns = [
       {
-        accessorKey: "nombres", // Nombre del usuario
+        accessorKey: "nombres", 
         header: "Nombres",
         cell: (info) => <span>{info.getValue()}</span>,
       },
       {
-        accessorKey: "telefono", // Teléfono del usuario
+        accessorKey: "telefono", 
         header: "Teléfono",
         cell: (info) => <span>{info.getValue() || "No disponible"}</span>,
       },
       {
-        accessorKey: "correo", // Correo del usuario
+        accessorKey: "correo", 
         header: "Correo",
         cell: (info) => <span>{info.getValue() || "No disponible"}</span>,
       },
       {
-        accessorKey: "tipouser", // Tipo de usuario
+        accessorKey: "tipouser", 
         header: "Tipo de Usuario",
         cell: (info) => <span>{info.getValue() || "No disponible"}</span>,
       },
       {
-        accessorKey: "acciones", // Acciones de la tabla (Editar y Eliminar)
+        accessorKey: "acciones", 
         header: "",
         enableSorting: false,
         cell: (info) => (
-          <td className="ContenCell">
-            <ContentAccionesTabla 
-              funcionEditar={() => editar(info.row.original)}
-              funcionEliminar={() => eliminar(info.row.original)}
-            />
-          </td>
+          <ContentAccionesTabla 
+            funcionEditar={() => editar(info.row.original)}
+            funcionEliminar={() => eliminar(info.row.original)}
+          />
         ),
       },
     ];

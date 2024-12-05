@@ -12,13 +12,14 @@ import Swal from "sweetalert2";
 import { FaArrowsAltV } from "react-icons/fa";
 import { ContentAccionesTabla, usePaqueteStore, Paginacion } from "../../../index";
 
-export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setAccion }) {
+export function TablaPaquete({ data, setOpenRegistraPaquete, setDataSelect, setAccion }) {
   const [pagina, setPagina] = useState(1);
   const { eliminarPaquete } = usePaqueteStore();
 
   // Función para editar un paquete
   const editar = (data) => {
-    if (data.paquetes.nombre === "Generico") {
+    console.log("Datos del paquete:", data.nombre);
+    if (data.nombre === "Generico") {
       Swal.fire({
         icon: "error",
         title: "No se puede editar este paquete",
@@ -26,8 +27,8 @@ export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setA
       });
       return;
     }
-    setopenRegistraPaquete(true);
-    setdataSelect(data);
+    setOpenRegistraPaquete(true);
+    setDataSelect(data);
     setAccion("Editar");
   };
 
@@ -45,7 +46,8 @@ export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setA
       });
 
       if (result.isConfirmed) {
-        await eliminarPaquete({ id_paquete: paquete.paquetes.id_paquete });
+        console.log(paquete.id_paquete);
+        await eliminarPaquete(paquete.id_paquete);
         Swal.fire("Eliminado!", "El paquete ha sido eliminado.", "success");
       }
     } catch (error) {
@@ -67,19 +69,22 @@ export function TablaPaquete({ data, setopenRegistraPaquete, setdataSelect, setA
       cell: (info) => <span>${info.getValue()}</span>,
     },
     {
-      accessorKey: "productos",  // Productos asociados al paquete
+      accessorKey: "paquete_producto",  // Acceder a 'paquete_producto'
       header: "Productos Asociados",
       cell: (info) => {
-        const products = info.getValue();  // Aquí obtienes los productos del paquete
+        const paqueteProductos = info.getValue();  // Obtener los productos asociados
         return (
           <td data-title="Productos Asociados" className="ContentCell">
-            {products && products.length > 0 ? (
+            {Array.isArray(paqueteProductos) && paqueteProductos.length > 0 ? (
               <ul>
-                {products.map((product, index) => (
-                  <li key={index}>
-                    {product.name} (x{product.cantidad})
-                  </li>
-                ))}
+                {paqueteProductos.map((producto, index) => {
+                  const { products, cantidad } = producto;  // Extraer el nombre del producto y cantidad
+                  return (
+                    <li key={index}>
+                      {products.name} (x{cantidad})  {/* Mostrar el nombre y cantidad */}
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
               <span>No hay productos</span>

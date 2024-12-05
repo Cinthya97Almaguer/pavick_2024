@@ -77,7 +77,7 @@ export function RegistrarCategorias({ onClose, dataSelect, accion }) {
                   placeholder=""
                   {...register("nombre", { required: true })}
                 />
-                <label className="form__label">Categoría</label>
+                <label className="form__label">ID_Categoría</label>
                 {errors.nombre?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>
@@ -90,7 +90,7 @@ export function RegistrarCategorias({ onClose, dataSelect, accion }) {
                   placeholder=""
                   {...register("descripcion", { required: true })}
                 />
-                <label className="form__label">Descripción</label>
+                <label className="form__label">Nombre</label>
                 {errors.descripcion?.type === "required" && <p>Campo requerido</p>}
               </InputText>
             </article>

@@ -11,59 +11,62 @@ import {
     RegistrarPersonal // Asegúrate de importar este componente
 } from "../../index";
 import { useState } from "react";
+export function PersonalTemplate() {
+  const [state, setState] = useState(false);
+  const [dataSelect, setDataSelect] = useState({});
+  const [openRegistrarPersonal, setOpenRegistrarPersonal] = useState(false);
+  const [accion, setAccion] = useState("");
 
-export function PersonalTemplate({data}) {
-    const [state, setState] = useState(false);
-    const [dataSelect, setDataSelect] = useState({});
-    const [openRegistrarPersonal, setOpenRegistrarPersonal] = useState(false);
-    const [accion, setAccion] = useState("");
+  const { datapersona, setBuscador, mostrarPersonal, parametro } = usePersonalStore();
 
-    const nuevoRegistro = () => {
-        setOpenRegistrarPersonal(!openRegistrarPersonal);
-        setAccion("Nuevo");
-        setDataSelect({});
-    };
+  const nuevoRegistro = () => {
+    setOpenRegistrarPersonal(!openRegistrarPersonal);
+    setAccion("Nuevo");
+    setDataSelect({});
+  };
 
-    const { setBuscador } = usePersonalStore();
-
-    return (
-      <Container>
-        {openRegistrarPersonal && 
-          <RegistrarPersonal
-            dataSelect={dataSelect} 
-            accion={accion} 
-            onClose={() => setOpenRegistrarPersonal(!openRegistrarPersonal)} 
+  return (
+    <Container>
+      {openRegistrarPersonal && 
+        <RegistrarPersonal
+          dataSelect={dataSelect} 
+          accion={accion} 
+          onClose={() => {
+            setOpenRegistrarPersonal(!openRegistrarPersonal);
+            mostrarPersonal(parametro); // Refrescar datos al cerrar
+          }} 
+        />
+      }
+      <header className="header">
+          <Header stateConfig={{ state: state, setState: () => setState(!state) }} />
+      </header>
+      <section className="area1">
+        {/* Puedes agregar más contenido aquí si es necesario */}
+      </section>
+      <ContentFiltro>
+          <Buscador setBuscador={setBuscador} />
+          <Title>
+              Usuarios
+          </Title>
+          <BtnFiltro 
+              funcion={nuevoRegistro} 
+              bgcolor="#f6f3f3"
+              textcolor="#353535"
+              icono={<v.agregar />}
           />
-        }
-        <header className="header">
-            <Header stateConfig={{ state: state, setState: () => setState(!state) }} />
-        </header>
-        <section className="area1">
-          {/* Puedes agregar más contenido aquí si es necesario */}
-        </section>
-        <ContentFiltro>
-            <Buscador setBuscador={setBuscador} />
-            <Title>
-                Usuarios
-            </Title>
-            <BtnFiltro 
-                funcion={nuevoRegistro} 
-                bgcolor="#f6f3f3"
-                textcolor="#353535"
-                icono={<v.agregar />}
-            />
-        </ContentFiltro>
-        <section className="main">
-            <TablaPersonal 
-                data={data} 
-                setOpenRegistrarPersonal={setOpenRegistrarPersonal}
-                setDataSelect={setDataSelect} 
-                setAccion={setAccion}
-            />
-        </section>
-      </Container>
-    );
+      </ContentFiltro>
+      <section className="main">
+          <TablaPersonal 
+              data={datapersona} 
+              setOpenRegistrarPersonal={setOpenRegistrarPersonal}
+              setDataSelect={setDataSelect} 
+              setAccion={setAccion}
+          />
+      </section>
+    </Container>
+  );
 }
+
 
 const Container = styled.div`
   min-height: 100vh;
@@ -75,7 +78,6 @@ const Container = styled.div`
   grid-template:
     "header" 100px
     "area1" 100px
-    "area2" 100px
     "main" auto;
   .header {
     grid-area: header;

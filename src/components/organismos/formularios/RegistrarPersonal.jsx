@@ -16,6 +16,7 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
   // Memorizar valores por defecto para evitar renders innecesarios
   const memoizedData = useMemo(() => {
     return {
+      id: dataSelect?.id || "",
       nombres: dataSelect?.nombres || "",
       telefono: dataSelect?.telefono || "",
       correo: dataSelect?.correo || "",
@@ -29,6 +30,7 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
   // Acción para insertar personal
   async function insertar(data) {
     const p = {
+      id: memoizedData.id,
       nombres: data.nombres,
       telefono: data.telefono,
       correo: data.correo,
@@ -119,17 +121,20 @@ export function RegistrarPersonal({ onClose, dataSelect, accion }) {
             {/* Campo de tipo de usuario */}
             <article>
               <InputText icono={<v.iconomarca />}>
-                <input
+                <select
                   className="form__field"
-                  type="text"
-                  placeholder="Tipo de usuario"
                   defaultValue={memoizedData.tipouser} // Valor por defecto
                   {...register("tipouser", { required: "El tipo de usuario es obligatorio" })}
-                />
+                >
+                  <option value="administrador">administrador</option>
+                  <option value="empleado">empleado</option>
+                </select>
                 <label className="form__label">Tipo de Usuario</label>
                 {errors.tipouser && <p>{errors.tipouser.message}</p>}
               </InputText>
             </article>
+
+            
             <div className="btnguardarContent">
               <Btnsave
                 icono={<v.iconoguardar />}

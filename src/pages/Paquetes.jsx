@@ -25,18 +25,14 @@ export function Paquetes() {
   }, [buscador, buscarPaqueteMutate]);
 
   // Mostrar loader si los datos están cargando
-  if (isLoadingPaquetes) {
-    return <SpinnerLoader message="Cargando paquetes..." />;
-  }
-
-  if (isLoadingBuscar) {
-    return <SpinnerLoader message="Buscando paquetes..." />;
+  if (isLoadingPaquetes || isLoadingBuscar) {
+    return <SpinnerLoader message="Cargando datos..." />;
   }
 
   // Manejar errores de consulta
   if (errorPaquetes) {
     console.error("Error al cargar paquetes:", errorPaquetes);
-    return <span>Error al cargar paquetes</span>;
+    return <span>Error al cargar paquetes. Intenta nuevamente.</span>;
   }
 
   // Seleccionar datos a mostrar: resultados de búsqueda o todos los paquetes
