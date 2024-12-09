@@ -163,26 +163,29 @@ export function RegistrarProductos({ onClose, dataSelect, accion }) {
                 {errors.stock_quantity?.type === "min" && <p>El stock debe ser mayor o igual a 0</p>}
               </InputText>
             </article>
+
+            {/* Categoria*/}
             <article>
-              <InputText icono={<v.iconomarca />}>
-                <select
-                  className="form__field"
-                  defaultValue={memoizedData.category_id} // Valor por defecto para "category_id"
-                  {...register("category_id", { required: true })}
-                >
-                  <option value="" disabled>
-                    Seleccione una categoría
+            <InputText icono={<v.iconomarca />}>
+              <select
+                className="form__field"
+                defaultValue={memoizedData.category_id} // Valor por defecto para "category_id"
+                {...register("category_id", { required: true })}
+              >
+                <option value="" disabled>
+                  Seleccione una categoría
+                </option>
+                {categorias.map((categoria) => (
+                  <option key={categoria.category_id} value={categoria.category_id}>
+                    {categoria.category_name} - {categoria.description}
                   </option>
-                  {categorias.map((categoria) => (
-                    <option key={categoria.category_id} value={categoria.category_id}>
-                      {categoria.category_name}
-                    </option>
-                  ))}
-                </select>
-                <label className="form__label">Categoría</label>
-                {errors.category_id?.type === "required" && <p>Campo requerido</p>}
-              </InputText>
-            </article>
+                ))}
+              </select>
+              <label className="form__label">Categoría</label>
+              {errors.category_id?.type === "required" && <p>Campo requerido</p>}
+            </InputText>
+          </article>
+
 
             {/* Estado Activo */}
             <article>
