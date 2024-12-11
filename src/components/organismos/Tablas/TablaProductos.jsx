@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -12,6 +12,7 @@ import {
   ContentAccionesTabla,
   Paginacion,
   useProductosStore,
+  supabase,
   Colorcontent,
   v,
 } from "../../../index";
@@ -26,8 +27,27 @@ export function TablaProductos({
 }) {
   const [pagina, setPagina] = useState(1);
   const { eliminarproductos } = useProductosStore();
-
+  const [categorias, setCategorias] = useState([]);
   const [updateFlag, setUpdateFlag] = useState(false);
+
+  // Función para obtener las categorías desde Supabase
+  async function fetchCategorias() {
+    try {
+      const { data, error } = await supabase.from("categories").select("category_id, category_name, description");
+      if (error) {
+        console.error("Error al obtener categorías:", error);
+      } else {
+        setCategorias(data); // Guardar categorías en el estado
+      }
+    } catch (error) {
+      console.error("Error al ejecutar fetchCategorias:", error);
+    }
+  }
+
+  // Obtener las categorías al montar el componente
+  useEffect(() => {
+    fetchCategorias();
+  }, []);
 
   const editar = (data) => {
     if (data.descripcion === "General") {
@@ -68,8 +88,8 @@ export function TablaProductos({
   };
 
   const handleEditar = (row) => {
-    editar(row); // Call the original editar function
-    setUpdateFlag((prev) => !prev); // Trigger re-evaluation of useMemo
+    editar(row); // Llama a la función editar original
+    setUpdateFlag((prev) => !prev); // Activa la reevaluación de useMemo
   };
 
   const columns = useMemo(() => [
@@ -84,7 +104,7 @@ export function TablaProductos({
     },
     {
       accessorKey: "description",
-      header: "Nombre",
+      header: "Descripción",
       cell: (info) => (
         <td data-title="Descripción" className="ContentCell">
           <span>{info.getValue()}</span>
@@ -112,11 +132,15 @@ export function TablaProductos({
     {
       accessorKey: "category_id",
       header: "Categoria",
-      cell: (info) => (
-        <td data-title="Categoria" className="ContentCell">
-          <span>{info.getValue()}</span>
-        </td>
-      ),
+      cell: (info) => {
+        // Obtener la categoría completa desde las categorias
+        const categoria = categorias.find(c => c.category_id === info.getValue());
+        return (
+          <td data-title="Categoria" className="ContentCell">
+            <span>{categoria ? `${categoria.category_name} - ${categoria.description}` : "Desconocida"}</span>
+          </td>
+        );
+      },
     },
     {
       accessorKey: "is_active",
@@ -140,7 +164,7 @@ export function TablaProductos({
         </td>
       ),
     },
-  ], [updateFlag]);
+  ], [categorias, updateFlag]);
 
   const table = useReactTable({
     data,

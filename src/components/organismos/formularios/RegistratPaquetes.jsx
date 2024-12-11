@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react"; 
+import { useEffect, useState, useMemo } from "react";
 import styled from "styled-components";
 import { useForm } from "react-hook-form";
 import { InputText, Btnsave, usePaqueteStore } from "../../../index";
@@ -25,7 +25,7 @@ export function RegistratPaquetes({ onClose, dataSelect, accion }) {
 
   useEffect(() => {
     async function fetchProductos() {
-      const { data, error } = await supabase.from("products").select("product_id, name, stock_quantity");
+      const { data, error } = await supabase.from("products").select("product_id, name,description, stock_quantity");
       if (!error) setProductos(data);
     }
     fetchProductos();
@@ -117,7 +117,7 @@ export function RegistratPaquetes({ onClose, dataSelect, accion }) {
                     <option value="">Seleccione un producto</option>
                     {productos.map((p) => (
                       <option key={p.product_id} value={p.product_id}>
-                        {p.name} (Stock: {p.stock_quantity})
+                         {p.name}-{p.description} (Stock: {p.stock_quantity})
                       </option>
                     ))}
                   </select>
@@ -220,4 +220,3 @@ const Container = styled.div`
     }
   }
 `;
-

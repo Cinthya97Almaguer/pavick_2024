@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -81,8 +81,8 @@ export function TablaPaquete({ data, setOpenRegistraPaquete, setDataSelect, setA
                   const { products, cantidad } = producto;  // Extraer el nombre del producto y cantidad
                   return (
                     <li key={index}>
-                      {products.name} (x{cantidad})  {/* Mostrar el nombre y cantidad */}
-                    </li>
+                      {products.name} - {products.description} (x{cantidad})
+                     </li>
                   );
                 })}
               </ul>
