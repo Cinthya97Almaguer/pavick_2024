@@ -74,12 +74,12 @@ export const DataModulosConfiguracion = [
 
   },
 
-  //{
-    //title: "Clientes",
-    //subtitle: "ten el control de los clientes",
-    //icono: "https://i.ibb.co/5vgZ0fX/hombre.png",
-    //link: "/configurar/clientes",
-  //},
+  {
+    title: "Clientes",
+    subtitle: "ten el control de los clientes",
+    icono: "https://i.ibb.co/5vgZ0fX/hombre.png",
+    link: "/configurar/clientes",
+  },
 
 
   {
@@ -103,6 +103,8 @@ export const DataModulosConfiguracion = [
     link: "/configurar/paquetes",
 
   },
+
+  
 
 ]
 //tipo usuario

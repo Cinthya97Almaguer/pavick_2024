@@ -5,6 +5,7 @@ import {
     Home, 
     Login, 
     Paquetes,
+    Clientes,
     Productos,
     Personal, 
     Ordenes,
@@ -38,6 +39,7 @@ export function MyRoutes(){
                 <Route path="/configurar" element={<Configuracion />} />
                 <Route path="/configurar/paquetes" element={<Paquetes />} />
                 <Route path="/configurar/categorias" element={<Categorias />} />
+                <Route path="/configurar/clientes" element={<Clientes />} />
                 <Route path="/configurar/productos" element={<Productos />} />
                 <Route path="/configurar/usuarios" element={<Personal />} />
                 <Route path="/configurar/empresa" element={<Ordenes />} />
